@@ -21,9 +21,11 @@ use Laravel\Sanctum\Sanctum;
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
-	Route::get('/', function () {
+	Route::get('/', function (Request $request) {
+
 		return response()->json([
-			"message" => "API Root"
+			"message" => "API Root",
+
 		], 200);
 	});
 

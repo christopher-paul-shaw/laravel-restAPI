@@ -15,21 +15,22 @@ class ContractorController extends Controller
 	 */
 	public function index(Request $request)
 	{
-
-
-		$company = $request->user()->id;
-
-/*
-		$contactor = \App\Contractor::where("company",$company);
-
-		if (count($contactor) < 1) {
+		$user = $request->user();
+		if (empty($user->contractors)) {
 			return response()->json([
 				"message" => "No Contractors Found"
-			],404);
+			], 404);
 		}
-*/
+		$list = [];
+		foreach ($user->contractors as $contractor) {
+			$list[] = [
+				"id" => $contractor->id,
+				"name" => $contractor->name,
+			];
+		}
+
 		return response()->json([
-			"message" => "This will list current contractors"
+			"contractors" => $list
 		], 200);
 	}
 
