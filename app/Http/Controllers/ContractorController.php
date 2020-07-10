@@ -95,9 +95,20 @@ class ContractorController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
+		$contractor = Contractor::find($id);
+
+		if (isset($request->name)) {
+			$contractor->name = $request->name;
+		}
+
+		if (isset($request->contactNumber)) {
+			$contractor->contactNumber = $request->contactNumber;
+		}
+
+		$contractor->save();
 
 		return response()->json([
-			"message" => "This will be contractor updated"
+			"message" => "This Contractor has Been Updated"
 		], 200);
 	}
 
