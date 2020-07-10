@@ -15,14 +15,16 @@ class ContractorController extends Controller
 	 */
 	public function index(Request $request)
 	{
-		$user = $request->user();
-		if (empty($user->contractors)) {
+		$contractors = $request->user()->contractors;
+
+		if (count($contractors) < 1) {
 			return response()->json([
 				"message" => "No Contractors Found"
 			], 404);
 		}
+
 		$list = [];
-		foreach ($user->contractors as $contractor) {
+		foreach ($contractors as $contractor) {
 			$list[] = [
 				"id" => $contractor->id,
 				"name" => $contractor->name,
@@ -45,7 +47,7 @@ class ContractorController extends Controller
 		$contractor = new Contractor();
 		$contractor->name = $request->name;
 		$contractor->contactNumber = $request->contactNumber;
-	#	$contractor->company = $request->user()->id;
+		$contractor->user_id = $request->user()->id;
 		$contractor->save();
 
 		return response()->json([
@@ -62,11 +64,11 @@ class ContractorController extends Controller
 	 */
 	public function show($id)
 	{
-		$contactor = \App\Contractor::find($id);
-		if (!$contactor) {
+		$contractor = $request->user()->contractors->find($id);
+		if (!$contractor) {
 			return response()->json([
-				"message" => "Contractor Not Found"
-			],404);
+				"message" => "Record Not Found"
+			], 404);
 		}
 
 		return response()->json([
@@ -95,7 +97,12 @@ class ContractorController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$contractor = Contractor::find($id);
+		$contractor = $request->user()->contractors->find($id);
+		if (!$contractor) {
+			return response()->json([
+				"message" => "Record Not Found"
+			], 404);
+		}
 
 		if (isset($request->name)) {
 			$contractor->name = $request->name;
@@ -120,6 +127,9 @@ class ContractorController extends Controller
 	 */
 	public function destroy($id)
 	{
+
+
+
 		Contractor::destroy($id);
 		return response()->json([
 			"message" => "The contractor has been deleted"
