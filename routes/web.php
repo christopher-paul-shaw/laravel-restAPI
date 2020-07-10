@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-});
+Auth::routes();
+
+Route::resource('/', 'TokenController')->middleware('auth');

@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Laravel\Sanctum\Sanctum;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -14,22 +16,25 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-	return response()->json([
-		"message" => "API Root"
-	], 200);
-});
 
-Route::get('/contractor/{id?}', function ($id=false) {
-	$contactor = \App\Contractor::find($id);
-	if (!$contactor) {
+
+
+Route::middleware(['auth:sanctum'])->group(function () {
+
+	Route::get('/', function () {
 		return response()->json([
-			"message" => "Contractor Not Found"
-		],404);
-	}
+			"message" => "API Root"
+		], 200);
+	});
 
-	return response()->json([
-		"name" => $contactor->name,
-		"contactNumber" => $contactor->contactNumber,
-	], 200);
+
+	Route::resource('/contractor', 'ContractorController');
+
+
+
+
+
 });
+
+
+

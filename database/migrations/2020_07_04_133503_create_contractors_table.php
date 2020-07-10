@@ -18,6 +18,7 @@ class CreateContractorsTable extends Migration
             $table->timestamps();
             $table->string("name");
             $table->string("contactNumber");
+            $table->number("company");
         });
     }
 
