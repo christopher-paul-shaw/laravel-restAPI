@@ -31,7 +31,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
 	Route::resource('/contractor', 'ContractorController');
-
+	Route::resource('/certification', 'CertificationController');
 
 
 

@@ -74,6 +74,7 @@ class ContractorController extends Controller
 		$certs = [];
 		foreach ($contractor->certifications as $certification) {
 			$certs[] = [
+				'id' => $certification->id,
 				'title' => $certification->title,
 				'expires' => $certification->expires
 			];

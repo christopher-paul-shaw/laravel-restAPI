@@ -7,7 +7,7 @@ use App\Contractor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ContractorController extends Controller
+class CertificationController extends Controller
 {
 	/**
 	 * Display a listing of the resource.
@@ -29,8 +29,13 @@ class ContractorController extends Controller
 	 */
 	public function store(Request $request)
 	{
+		if (!$request->user()->contractors->find($request->contractor_id)) {
+			return response()->json([
+				"message" => "You do not have access to this Contractor"
+			], 400);
+		}
 		$contractor = new Certification();
-		$contractor->name = $request->name;
+		$contractor->title = $request->title;
 		$contractor->body = $request->body;
 		$contractor->contractor_id = $request->contractor_id;
 		$contractor->achieved = $request->achieved;
@@ -65,16 +70,22 @@ class ContractorController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$contractor = Certification::find($id);
-		$contractor->name = $request->name;
-		$contractor->body = $request->body;
-		$contractor->contractor_id = $request->contractor_id;
-		$contractor->achieved = $request->achieved;
-		$contractor->expires = $request->expires;
-		$contractor->save();
+		$contractor = $request->user()->contractors->find($request->contractor_id);
+		$certification = $contractor->certifications->find($id);
+		if (!$certification) {
+			return response()->json([
+				"message" => "You do not have access to this Contractor"
+			], 400);
+		}
+		$certification->title = $request->title;
+		$certification->body = $request->body;
+		$certification->contractor_id = $request->contractor_id;
+		$certification->achieved = $request->achieved;
+		$certification->expires = $request->expires;
+		$certification->save();
 
 		return response()->json([
-			"message" => "This Contractor has Been Updated"
+			"message" => "This Certification has Been Updated"
 		], 200);
 	}
 
@@ -84,8 +95,15 @@ class ContractorController extends Controller
 	 * @param  int  $id
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy($id)
+	public function destroy($id, Request $request)
 	{
+		$certification = Certification::find($id);
+		$contractor_id = $certification->contractor_id ?? 0;
+		if(!$request->user()->contractors->find($contractor_id)) {
+			return response()->json([
+				"message" => "You do not have access to this Contractor"
+			], 400);
+		}
 		Certification::destroy($id);
 		return response()->json([
 			"message" => "The certification has been deleted"
