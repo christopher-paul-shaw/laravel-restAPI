@@ -71,9 +71,18 @@ class ContractorController extends Controller
 			], 404);
 		}
 
+		$certs = [];
+		foreach ($contractor->certifications as $certification) {
+			$certs[] = [
+				'title' => $certification->title,
+				'expires' => $certification->expires
+			];
+		}
+
 		return response()->json([
-			"name" => $contactor->name,
-			"contactNumber" => $contactor->contactNumber,
+			"name" => $contractor->name,
+			"contactNumber" => $contractor->contactNumber,
+			"certifications" => $certs
 		], 200);
 	}
 
