@@ -17,7 +17,7 @@ use Laravel\Sanctum\Sanctum;
 */
 
 
-
+Route::resource('/token', 'TokenController');
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
